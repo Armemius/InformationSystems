@@ -1,5 +1,6 @@
 package com.armemius.labwork.data.domain;
 
+import com.armemius.labwork.service.abstractions.Owned;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +28,7 @@ import java.util.List;
 @Table(name = "coordinates")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Coordinates {
+public class Coordinates implements Owned {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.armemius.labwork.data.domain;
 
+import com.armemius.labwork.service.abstractions.Owned;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,7 +25,7 @@ import java.util.Date;
 @Table(name = "organization")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Organization {
+public class Organization implements Owned {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.armemius.labwork.data.domain;
 
+import com.armemius.labwork.service.abstractions.Owned;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ import java.util.List;
 @Table(name = "location")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Location {
+public class Location implements Owned {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
