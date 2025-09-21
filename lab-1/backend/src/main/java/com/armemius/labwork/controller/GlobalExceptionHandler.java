@@ -3,8 +3,14 @@ package com.armemius.labwork.controller;
 import com.armemius.labwork.exceptions.LabworkException;
 import com.armemius.labwork.exceptions.auth.UserNotFoundException;
 import com.armemius.labwork.exceptions.auth.UsernameTakenException;
+import com.armemius.labwork.exceptions.object.AddressNotFoundException;
+import com.armemius.labwork.exceptions.object.CoordinatesNotFoundException;
+import com.armemius.labwork.exceptions.object.LocationNotFoundException;
+import com.armemius.labwork.exceptions.object.ObjectNotFoundException;
+import com.armemius.labwork.exceptions.object.OrganizationNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -40,7 +46,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler({ UsernameNotFoundException.class, UserNotFoundException.class })
+    @ExceptionHandler({
+            UsernameNotFoundException.class,
+            UserNotFoundException.class,
+            PropertyReferenceException.class,
+            ObjectNotFoundException.class,
+    })
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         Map<String, Object> body = createBody(HttpStatus.NOT_FOUND);
         body.put("error", ex.getMessage());
