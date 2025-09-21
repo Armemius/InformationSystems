@@ -27,3 +27,11 @@ jwt:
   secret: ${JWT_SECRET}
   issuer: ${JWT_ISSUER:Armemius}
   token-expiration: ${JWT_EXPIRATION_MS:900000}
+springdoc:
+  swagger-ui:
+    path: /docs/
+    enabled: true
+  api-docs:
+    path: /docs/schema
+  packagesToScan: com.armemius.labwork
+  pathsToMatch: /**
