@@ -32,6 +32,10 @@ public class Organization {
     @Min(value = 0)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private AppUser owner;
+
     @Column(name = "name", nullable = false)
     @NotBlank
     private String name;

@@ -33,6 +33,10 @@ public class Address {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private AppUser owner;
+
     @Column(name = "street", nullable = false)
     @NotBlank
     private String street;

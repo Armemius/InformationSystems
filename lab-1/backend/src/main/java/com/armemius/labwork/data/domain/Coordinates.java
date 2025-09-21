@@ -34,6 +34,10 @@ public class Coordinates {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private AppUser owner;
+
     @Column(name = "x", nullable = false)
     @Min(value = -469)
     @NotNull
