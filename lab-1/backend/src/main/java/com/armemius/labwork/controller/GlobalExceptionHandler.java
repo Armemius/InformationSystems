@@ -1,5 +1,6 @@
 package com.armemius.labwork.controller;
 
+import com.armemius.labwork.exceptions.auth.UserNotFoundException;
 import com.armemius.labwork.exceptions.auth.UsernameTakenException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -38,8 +39,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<Object> handleNotFound(UsernameNotFoundException ex) {
+    @ExceptionHandler({ UsernameNotFoundException.class, UserNotFoundException.class })
+    public ResponseEntity<Object> handleNotFound(Exception ex) {
         Map<String, Object> body = createBody(HttpStatus.NOT_FOUND);
         body.put("error", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
