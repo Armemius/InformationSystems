@@ -1,5 +1,6 @@
 package com.armemius.labwork.controller;
 
+import com.armemius.labwork.exceptions.LabworkException;
 import com.armemius.labwork.exceptions.auth.UserNotFoundException;
 import com.armemius.labwork.exceptions.auth.UsernameTakenException;
 import jakarta.validation.ConstraintViolation;
@@ -104,6 +105,13 @@ public class GlobalExceptionHandler {
     }
 
     // Fallback for other exceptions
+    @ExceptionHandler(LabworkException.class)
+    public ResponseEntity<Object> handleCustomExceptions(LabworkException ex) {
+        Map<String, Object> body = createBody(HttpStatus.BAD_REQUEST);
+        body.put("error", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleOtherExceptions(Exception ex) {
         Map<String, Object> body = createBody(HttpStatus.INTERNAL_SERVER_ERROR);
