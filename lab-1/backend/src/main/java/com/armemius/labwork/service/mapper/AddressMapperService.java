@@ -8,6 +8,7 @@ import com.armemius.labwork.data.repository.AppUserRepository;
 import com.armemius.labwork.data.repository.LocationRepository;
 import com.armemius.labwork.exceptions.auth.UserNotFoundException;
 import com.armemius.labwork.exceptions.object.LocationNotFoundException;
+import com.armemius.labwork.service.abstractions.MapperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AddressMapperService {
+public class AddressMapperService implements MapperService<AddressDto, Address> {
 
     private final AppUserRepository appUserRepository;
     private final LocationRepository locationRepository;
 
+    @Override
     public AddressDto toDto(Address entity) {
         if (entity == null) {
             return null;
@@ -34,6 +36,7 @@ public class AddressMapperService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Address toEntity(AddressDto dto) {
         if (dto == null) {
             return null;

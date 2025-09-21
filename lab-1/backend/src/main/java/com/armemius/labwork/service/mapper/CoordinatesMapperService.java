@@ -5,16 +5,18 @@ import com.armemius.labwork.data.domain.Coordinates;
 import com.armemius.labwork.data.dto.objects.CoordinatesDto;
 import com.armemius.labwork.data.repository.AppUserRepository;
 import com.armemius.labwork.exceptions.auth.UserNotFoundException;
+import com.armemius.labwork.service.abstractions.MapperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CoordinatesMapperService {
+public class CoordinatesMapperService implements MapperService<CoordinatesDto, Coordinates> {
 
     private final AppUserRepository appUserRepository;
 
+    @Override
     public CoordinatesDto toDto(Coordinates entity) {
         if (entity == null) {
             return null;
@@ -27,6 +29,7 @@ public class CoordinatesMapperService {
         return dto;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Coordinates toEntity(CoordinatesDto dto) {
         if (dto == null) {

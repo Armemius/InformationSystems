@@ -11,18 +11,20 @@ import com.armemius.labwork.data.repository.CoordinatesRepository;
 import com.armemius.labwork.exceptions.auth.UserNotFoundException;
 import com.armemius.labwork.exceptions.object.AddressNotFoundException;
 import com.armemius.labwork.exceptions.object.CoordinatesNotFoundException;
+import com.armemius.labwork.service.abstractions.MapperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class OrganizationMapperService {
+public class OrganizationMapperService implements MapperService<OrganizationDto, Organization> {
 
     private final AppUserRepository appUserRepository;
     private final CoordinatesRepository coordinatesRepository;
     private final AddressRepository addressRepository;
 
+    @Override
     public OrganizationDto toDto(Organization entity) {
         if (entity == null) {
             return null;
@@ -42,6 +44,7 @@ public class OrganizationMapperService {
         return dto;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Organization toEntity(OrganizationDto dto) {
         if (dto == null) {
