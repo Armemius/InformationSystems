@@ -26,10 +26,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 abstract public class CrudController<T> {
 
-    private final CrudService<?, T> crudService;
+    protected final CrudService<?, T> crudService;
 
     protected CrudController(CrudService<?, T> crudService) {
         this.crudService = crudService;
@@ -57,10 +59,18 @@ abstract public class CrudController<T> {
     public ResponseEntity<List<T>> getAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "id") String sortBy
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sort,
+            @RequestParam(required = false) String filter
     ) {
         return ResponseEntity.ok(crudService.getAll(
-                PageRequest.of(page, size, Sort.by(sortBy))
+                PageRequest.of(
+                        page,
+                        size,
+                        Objects.equals(sort, "asc") ?
+                                Sort.by(sortBy).ascending() :
+                                Sort.by(sortBy).descending()
+                )
         ).toList());
     }
 
