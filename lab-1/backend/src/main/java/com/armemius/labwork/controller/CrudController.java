@@ -1,6 +1,7 @@
 package com.armemius.labwork.controller;
 
 import com.armemius.labwork.annotations.CurrentUser;
+import com.armemius.labwork.annotations.NotifyClients;
 import com.armemius.labwork.data.domain.AppUser;
 import com.armemius.labwork.data.dto.ErrorResponseDto;
 import com.armemius.labwork.data.dto.SimpleSuccessDto;
@@ -117,6 +118,7 @@ abstract public class CrudController<T> {
                     )
             )
     })
+    @NotifyClients("Some object was created")
     public ResponseEntity<T> create(
             @Valid @RequestBody T location,
             @CurrentUser @Parameter(hidden = true) AppUser user
@@ -149,6 +151,7 @@ abstract public class CrudController<T> {
                     )
             )
     })
+    @NotifyClients("Some object was updated")
     public ResponseEntity<T> update(
             @Valid @RequestBody T location,
             @Valid @NotNull @PathVariable Long id
@@ -181,6 +184,7 @@ abstract public class CrudController<T> {
             )
     })
     @DeleteMapping("/{id}")
+    @NotifyClients("Some object was deleted")
     public ResponseEntity<SimpleSuccessDto> delete(
             @Valid @NotNull @PathVariable Long id
     ) {

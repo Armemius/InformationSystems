@@ -1,5 +1,6 @@
 package com.armemius.labwork.controller;
 
+import com.armemius.labwork.annotations.NotifyClients;
 import com.armemius.labwork.data.dto.ErrorResponseDto;
 import com.armemius.labwork.data.dto.objects.OrganizationDto;
 import com.armemius.labwork.service.ManagementService;
@@ -116,6 +117,7 @@ public class ManagementController {
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
             )
     })
+    @NotifyClients("Some organizations were merged")
     public ResponseEntity<OrganizationDto> mergeOrganizations(
             @RequestParam Long firstOrgId,
             @RequestParam Long secondOrgId,
@@ -148,6 +150,7 @@ public class ManagementController {
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
             )
     })
+    @NotifyClients("Some organization was absorbed")
     public ResponseEntity<OrganizationDto> absorbOrganization(
             @RequestParam Long absorberId,
             @RequestParam Long absorbedId
