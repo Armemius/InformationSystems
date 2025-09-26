@@ -6,5 +6,5 @@ public enum OrganizationType {
     PUBLIC,
     GOVERNMENT,
     TRUST,
-    OPEN_JOINT_STOCK_COMPANY;
+    OPEN_JOINT_STOCK_COMPANY
 }

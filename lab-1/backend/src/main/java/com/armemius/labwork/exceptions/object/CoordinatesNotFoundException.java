@@ -1,8 +1,7 @@
 package com.armemius.labwork.exceptions.object;
 
-import com.armemius.labwork.exceptions.LabworkException;
-
 public class CoordinatesNotFoundException extends ObjectNotFoundException {
+
     public CoordinatesNotFoundException(String message) {
         super(message);
     }

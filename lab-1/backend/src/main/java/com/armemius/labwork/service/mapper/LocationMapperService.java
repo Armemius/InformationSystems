@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class LocationMapperService implements MapperService<LocationDto, Location> {
+
     private final AppUserRepository appUserRepository;
 
     @Override

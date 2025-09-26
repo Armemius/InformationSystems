@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
     private final AppUserRepository userRepository;
@@ -57,7 +58,7 @@ public class AuthService {
 
     private String getTokenForUser(String username, String password) {
         Authentication auth = getUserAuthentication(username, password);
-        return  "Bearer " + jwtProvider.generateToken(auth.getName());
+        return "Bearer " + jwtProvider.generateToken(auth.getName());
     }
 
     @Transactional

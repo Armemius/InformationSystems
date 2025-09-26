@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleSuccessDto {
+
     private String data = "Success";
 }
