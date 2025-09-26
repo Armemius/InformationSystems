@@ -6,8 +6,9 @@
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
-  import { ModeWatcher } from "mode-watcher";
+	import { ModeWatcher } from 'mode-watcher';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import Notifier from '$lib/components/notifications.svelte';
 
 	let { children } = $props();
 
@@ -24,6 +25,7 @@
 		<AuthForm />
 	</div>
 {:else}
+	<Notifier />
 	<Sidebar.Provider>
 		<AppSidebar />
 		<Sidebar.Inset>
