@@ -31,9 +31,6 @@ public class Organization {
     private float annualTurnover;
 
     // Значение поля должно быть больше 0
-    private float annualTurnover;
-
-    // Значение поля должно быть больше 0
     private int employeesCount;
 
     // Поле не может быть null
