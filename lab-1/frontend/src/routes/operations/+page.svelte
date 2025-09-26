@@ -16,6 +16,10 @@
 		<Separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
 		<Breadcrumb.Root>
 			<Breadcrumb.List>
+				<Breadcrumb.Item class="hidden md:block">
+					<Breadcrumb.Link href="/">Главная</Breadcrumb.Link>
+				</Breadcrumb.Item>
+				<Breadcrumb.Separator class="hidden md:block" />
 				<Breadcrumb.Item>
 					<Breadcrumb.Page>Операции</Breadcrumb.Page>
 				</Breadcrumb.Item>
