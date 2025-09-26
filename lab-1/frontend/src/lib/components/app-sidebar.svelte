@@ -19,6 +19,7 @@
 				title: 'Предметная область',
 				url: '#',
 				icon: BoxIcon,
+				isActive: true,
 				items: [
 					{
 						title: 'Организации',
@@ -42,6 +43,7 @@
 				title: 'Управление',
 				url: '#',
 				icon: BriefcaseIcon,
+				isActive: true,
 				items: [
 					{
 						title: 'Карта',
