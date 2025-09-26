@@ -3,22 +3,31 @@
 	import { onMount } from 'svelte';
 	import { authStore, loadUser } from '$lib/stores/user';
 	import AuthForm from '$lib/components/auth/auth-form.svelte';
+	import AppSidebar from '$lib/components/app-sidebar.svelte';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
+	import { Separator } from '$lib/components/ui/separator/index.js';
+  import { ModeWatcher } from "mode-watcher";
+	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 
-  let { children } = $props();
+	let { children } = $props();
 
 	onMount(() => {
 		loadUser();
 	});
 </script>
 
+<ModeWatcher />
 {#if $authStore === undefined}
-	<div class="flex h-screen w-full items-center justify-center text-2xl">
-    Загрузка...
-  </div>
+	<div class="flex h-screen w-full items-center justify-center text-2xl">Загрузка...</div>
 {:else if $authStore === null}
 	<div class="flex h-screen w-full items-center justify-center px-4">
 		<AuthForm />
 	</div>
 {:else}
-	{@render children()}
+	<Sidebar.Provider>
+		<AppSidebar />
+		<Sidebar.Inset>
+			{@render children()}
+		</Sidebar.Inset>
+	</Sidebar.Provider>
 {/if}
