@@ -8,5 +8,8 @@ export default defineConfig({
 		tailwindcss(),
 		sveltekit(),
 		devtoolsJson()
-	]
+	],
+	define: {
+    global: 'globalThis'
+  }
 });
