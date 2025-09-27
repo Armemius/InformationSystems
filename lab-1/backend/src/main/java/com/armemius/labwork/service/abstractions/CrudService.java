@@ -43,6 +43,10 @@ public abstract class CrudService<K extends Owned, V> {
         return repository.findAll(pageable).map(mapper::toDto);
     }
 
+    public Long getTotal() {
+        return repository.count();
+    }
+
     protected void updateEntityFromDto(K entity, V dto) {
         K temp = mapper.toEntity(dto);
         BeanUtils.copyProperties(temp, entity, getIgnoredPropertiesForUpdate());

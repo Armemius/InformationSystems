@@ -73,6 +73,32 @@ abstract public class CrudController<T> {
         ).toList());
     }
 
+    @GetMapping("/total")
+    @Operation(
+            summary = "Get total objects count",
+            description = "Get count of all objects present in persistence, maybe with filtering"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Total count was successfully retrieved"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Validation or other errors",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
+    public ResponseEntity<SimpleSuccessDto<Long>> getTotalCount(
+            @RequestParam(required = false) String filter
+    ) {
+        return ResponseEntity.ok(new SimpleSuccessDto<>(
+                crudService.getTotal()
+        ));
+    }
+
     @GetMapping("/{id}")
     @Operation(
             summary = "Get one object",

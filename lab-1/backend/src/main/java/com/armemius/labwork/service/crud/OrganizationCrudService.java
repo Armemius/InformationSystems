@@ -27,4 +27,11 @@ public class OrganizationCrudService extends CrudService<Organization, Organizat
         }
         return organizationRepository.findAllByName(filter, page).map(mapper::toDto);
     }
+
+    public Long getTotalWithFilter(String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return super.getTotal();
+        }
+        return organizationRepository.countAllByName(filter);
+    }
 }

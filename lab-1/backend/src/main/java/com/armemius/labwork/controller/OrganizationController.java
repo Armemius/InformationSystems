@@ -1,5 +1,6 @@
 package com.armemius.labwork.controller;
 
+import com.armemius.labwork.data.dto.SimpleSuccessDto;
 import com.armemius.labwork.data.dto.objects.OrganizationDto;
 import com.armemius.labwork.service.crud.OrganizationCrudService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,5 +49,17 @@ public class OrganizationController extends CrudController<OrganizationDto> {
                 ),
                 filter
         ).toList());
+    }
+
+    @Override
+    public ResponseEntity<SimpleSuccessDto<Long>> getTotalCount(
+            @RequestParam(required = false) String filter
+    ) {
+        if (filter == null) {
+            return super.getTotalCount(null);
+        }
+        return ResponseEntity.ok(new SimpleSuccessDto<>(
+                organizationCrudService.getTotalWithFilter(filter)
+        ));
     }
 }
