@@ -194,11 +194,11 @@ abstract public class CrudController<T> {
     })
     @DeleteMapping("/{id}")
     @NotifyClients("Some object was deleted")
-    public ResponseEntity<SimpleSuccessDto> delete(
+    public ResponseEntity<SimpleSuccessDto<String>> delete(
             @Valid @NotNull @PathVariable Long id
     ) {
         crudService.delete(id);
-        return ResponseEntity.ok(new SimpleSuccessDto());
+        return ResponseEntity.ok(new SimpleSuccessDto<>("Success"));
     }
 
 }

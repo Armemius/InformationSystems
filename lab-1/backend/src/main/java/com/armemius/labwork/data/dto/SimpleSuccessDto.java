@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SimpleSuccessDto {
-
-    private String data = "Success";
+public class SimpleSuccessDto<T> {
+    private T data;
 }
