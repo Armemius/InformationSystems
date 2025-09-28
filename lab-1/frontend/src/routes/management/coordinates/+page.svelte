@@ -22,6 +22,7 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import EditCoordinatesDialog from '$lib/components/dialog/edit-coordinates.svelte';
 	import CreateCoordinatesDialog from '$lib/components/dialog/create-coordinates.svelte';
+	import ShowCoordinatesDialog from '$lib/components/dialog/show-coordinates.svelte';
 
 	let currentPage = $state(0);
 	let totalElements = $state(0);
@@ -29,6 +30,7 @@
 	let pageSizeVariants = [10, 20, 30, 40, 50];
 	let coordinatesList = $state<Coordinates[]>([]);
 
+	let toggleShowDialogApi = $state<any>({});
 	let toggleEditDialogApi = $state<any>({});
 	let toggleCreateDialogApi = $state<any>({});
 
@@ -123,54 +125,58 @@
 	};
 </script>
 
-<header
-	class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
->
-	<div class="flex items-center gap-2 px-4">
-		<Sidebar.Trigger class="-ml-1" />
-		<Separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
-		<Breadcrumb.Root>
-			<Breadcrumb.List>
-				<Breadcrumb.Item class="hidden md:block">
-					<Breadcrumb.Link href="/">Главная</Breadcrumb.Link>
-				</Breadcrumb.Item>
-				<Breadcrumb.Separator class="hidden md:block" />
-				<Breadcrumb.Item class="hidden md:block">
-					<Breadcrumb.Link href="/management">Предметная область</Breadcrumb.Link>
-				</Breadcrumb.Item>
-				<Breadcrumb.Separator class="hidden md:block" />
-				<Breadcrumb.Item>
-					<Breadcrumb.Page>Координаты</Breadcrumb.Page>
-				</Breadcrumb.Item>
-			</Breadcrumb.List>
-		</Breadcrumb.Root>
-	</div>
-</header>
+<div class="grid h-full grid-rows-[min-content_1fr_min-content]">
+	<header
+		class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
+	>
+		<div class="flex items-center gap-2 px-4">
+			<Sidebar.Trigger class="-ml-1" />
+			<Separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
+			<Breadcrumb.Root>
+				<Breadcrumb.List>
+					<Breadcrumb.Item class="hidden md:block">
+						<Breadcrumb.Link href="/">Главная</Breadcrumb.Link>
+					</Breadcrumb.Item>
+					<Breadcrumb.Separator class="hidden md:block" />
+					<Breadcrumb.Item class="hidden md:block">
+						<Breadcrumb.Link href="/management">Предметная область</Breadcrumb.Link>
+					</Breadcrumb.Item>
+					<Breadcrumb.Separator class="hidden md:block" />
+					<Breadcrumb.Item>
+						<Breadcrumb.Page>Координаты</Breadcrumb.Page>
+					</Breadcrumb.Item>
+				</Breadcrumb.List>
+			</Breadcrumb.Root>
+		</div>
+	</header>
 
-<div class="w-full p-8">
-	<Table.Root>
-		<Table.Header>
-			<Table.Row>
-				<Table.Head class="w-[100px]">ID</Table.Head>
-				<Table.Head>X</Table.Head>
-				<Table.Head>Y</Table.Head>
-				<Table.Head class="w-[50px]"></Table.Head>
-			</Table.Row>
-		</Table.Header>
-		<Table.Body>
-			{#each coordinatesList as coordinate (coordinate.id)}
-				<Table.Row>
-					<Table.Cell class="font-medium">{coordinate.id ?? 'N/A'}</Table.Cell>
-					<Table.Cell>{coordinate.x ?? 'N/A'}</Table.Cell>
-					<Table.Cell>{coordinate.y ?? 'N/A'}</Table.Cell>
-					<Table.Cell>
-						{@render DataTableActions(coordinate)}
-					</Table.Cell>
-				</Table.Row>
-			{/each}
-		</Table.Body>
-	</Table.Root>
-	<div class="mt-4 flex items-center justify-between px-4">
+	<div class="flex h-full w-full flex-col justify-between p-8 relative">
+		<div class="overflow-y-scroll absolute inset-8">
+			<Table.Root>
+				<Table.Header>
+					<Table.Row>
+						<Table.Head class="w-[100px]">ID</Table.Head>
+						<Table.Head>X</Table.Head>
+						<Table.Head>Y</Table.Head>
+						<Table.Head class="w-[50px]"></Table.Head>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{#each coordinatesList as coordinate (coordinate.id)}
+						<Table.Row>
+							<Table.Cell class="font-medium">{coordinate.id ?? 'N/A'}</Table.Cell>
+							<Table.Cell>{coordinate.x ?? 'N/A'}</Table.Cell>
+							<Table.Cell>{coordinate.y ?? 'N/A'}</Table.Cell>
+							<Table.Cell>
+								{@render DataTableActions(coordinate)}
+							</Table.Cell>
+						</Table.Row>
+					{/each}
+				</Table.Body>
+			</Table.Root>
+		</div>
+	</div>
+	<div class="mt-8 mb-4 flex items-center justify-between px-4 gap-4">
 		<Button onclick={() => toggleCreateDialogApi.toggle()} variant="outline" size="sm">
 			<PlusIcon />
 			<span class="hidden lg:inline">Добавить новый элемент</span>
@@ -242,6 +248,7 @@
 
 <EditCoordinatesDialog bind:expose={toggleEditDialogApi} />
 <CreateCoordinatesDialog bind:expose={toggleCreateDialogApi} />
+<ShowCoordinatesDialog bind:expose={toggleShowDialogApi} />
 
 {#snippet DataTableActions(item: Coordinates)}
 	<DropdownMenu.Root>
@@ -254,6 +261,9 @@
 			{/snippet}
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content align="end" class="w-32">
+			<DropdownMenu.Item onclick={() => toggleShowDialogApi.toggle(item)}
+				>Информация</DropdownMenu.Item
+			>
 			<DropdownMenu.Item onclick={() => toggleEditDialogApi.toggle(item)}
 				>Изменить</DropdownMenu.Item
 			>
