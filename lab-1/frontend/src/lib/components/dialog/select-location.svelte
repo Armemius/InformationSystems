@@ -128,7 +128,8 @@
 						class="cursor-pointer"
 						onclick={() => {
 							if (currentLocation?.id == loc?.id) {
-								currentLocation = null;
+								callback(currentLocation);
+								open = false;
 							} else {
 								currentLocation = loc;
 							}

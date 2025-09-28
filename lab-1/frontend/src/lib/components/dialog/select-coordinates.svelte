@@ -127,7 +127,8 @@
 						class="cursor-pointer"
 						onclick={() => {
 							if (currentCoord?.id == coord?.id) {
-								currentCoord = null;
+								callback(currentCoord);
+								open = false;
 							} else {
 								currentCoord = coord;
 							}

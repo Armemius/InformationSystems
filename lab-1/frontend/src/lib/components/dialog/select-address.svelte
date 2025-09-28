@@ -131,7 +131,8 @@
 						class="cursor-pointer"
 						onclick={() => {
 							if (currentAddress?.id == addr?.id) {
-								currentAddress = null;
+								callback(currentAddress);
+								open = false;
 							} else {
 								currentAddress = addr;
 							}
