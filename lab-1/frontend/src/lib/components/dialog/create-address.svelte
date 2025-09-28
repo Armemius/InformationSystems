@@ -74,14 +74,6 @@
 		</Dialog.Header>
 		<div class="grid gap-4 py-4">
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="id" class="text-right">ID</Label>
-				<Input id="id" value={'-'} disabled class="col-span-3" />
-			</div>
-			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="userId" class="text-right">ID владельца</Label>
-				<Input id="userId" value={'-'} disabled class="col-span-3" />
-			</div>
-			<div class="grid grid-cols-4 items-center gap-4">
 				<Label for="street" class="text-right">Улица</Label>
 				<Input id="street" bind:value={street} class="col-span-3" />
 			</div>
