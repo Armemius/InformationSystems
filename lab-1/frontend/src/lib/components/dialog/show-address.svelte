@@ -37,6 +37,30 @@
 		open = true;
 	};
 
+	expose.toggleById = async (addrId: number) => {
+		try {
+			const resp = await http.get<Address>(`/management/address/${addrId}`);
+			const addr = resp.data;
+			if (addr.id) {
+				id = String(addr.id);
+			} else {
+				id = '';
+			}
+			if (addr.ownerId) {
+				ownerId = String(addr.ownerId);
+			} else {
+				ownerId = '';
+			}
+			street = addr.street;
+			zipCode = addr.zipCode ?? '-';
+			townId = addr.townId;
+			open = true;
+		} catch (ex) {
+			toast('Ошибка загрузки адреса');
+			console.error('Error while fetching address', ex);
+		}
+	};
+
 	const validate = () => {
 		if (!street) {
 			errorMessage = 'Введите улицу';
