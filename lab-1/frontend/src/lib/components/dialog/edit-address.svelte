@@ -94,7 +94,11 @@
 				<Input id="userId" value={ownerId ?? '-'} disabled class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="street" class="text-right">Улица</Label>
+				<Label for="street" class="text-right">
+					<span>
+						Улица<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<Input id="street" bind:value={street} class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
@@ -102,7 +106,11 @@
 				<Input id="zipCode" bind:value={zipCode} class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="town" class="text-right">Город</Label>
+				<Label for="town" class="text-right">
+					<span>
+						Город<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<div class="col-span-3 grid grid-cols-5 gap-2">
 					<Button
 						id="town"

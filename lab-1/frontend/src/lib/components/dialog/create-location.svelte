@@ -83,15 +83,27 @@
 		</Dialog.Header>
 		<div class="grid gap-4 py-4">
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="x" class="text-right">X</Label>
+				<Label for="x" class="text-right">
+					<span>
+						X<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<Input id="x" type="number" bind:value={x} class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="y" class="text-right">Y</Label>
+				<Label for="y" class="text-right">
+					<span>
+						Y<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<Input id="y" type="number" bind:value={y} class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="z" class="text-right">Z</Label>
+				<Label for="z" class="text-right">
+					<span>
+						Z<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<Input id="z" type="number" bind:value={z} class="col-span-3" />
 			</div>
 		</div>

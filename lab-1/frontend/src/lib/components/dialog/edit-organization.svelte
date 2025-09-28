@@ -176,11 +176,19 @@
 				<Input id="name" value={ownerId ?? '-'} disabled class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="name" class="text-right">Имя</Label>
+				<Label for="name" class="text-right">
+					<span>
+						Имя<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<Input id="name" bind:value={name} class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="town" class="text-right">Координаты</Label>
+				<Label for="town" class="text-right">
+					<span>
+						Координаты<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<div class="col-span-3 grid grid-cols-5 gap-2">
 					<Button
 						id="town"
@@ -234,15 +242,27 @@
 				</div>
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="annualTurnover" class="text-right">Выр. за год</Label>
+				<Label for="annualTurnover" class="text-right">
+					<span>
+						Выр. за год<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<Input id="annualTurnover" type="number" bind:value={annualTurnover} class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="employeesCount" class="text-right">Сотрудники</Label>
+				<Label for="employeesCount" class="text-right">
+					<span>
+						Сотрудники<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<Input id="employeesCount" type="number" bind:value={employeesCount} class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="rating" class="text-right">Рейтинг</Label>
+				<Label for="rating" class="text-right">
+					<span>
+						Рейтинги<span class="text-red-500">*</span>
+					</span>
+				</Label>
 				<Input id="rating" type="number" bind:value={rating} class="col-span-3" />
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
