@@ -39,7 +39,7 @@
 			errorMessage = 'Значение X должно быть числом';
 			return false;
 		}
-		if (xValue < -469) {
+		if (xValue <= -469) {
 			errorMessage = 'Значение X должно быть больше -469';
 			return false;
 		}
@@ -48,7 +48,7 @@
 			errorMessage = 'Значение Y должно быть числом';
 			return false;
 		}
-		if (yValue < -440) {
+		if (yValue <= -440) {
 			errorMessage = 'Значение Y должно быть больше -440';
 			return false;
 		}
