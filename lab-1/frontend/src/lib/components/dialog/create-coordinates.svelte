@@ -8,8 +8,7 @@
 	import { toast } from 'svelte-sonner';
 
 	let open = $state(false);
-	// let coordinates = $state<Coordinates | null>(null);
-	let { expose = $bindable({}) } = $props();
+	let { expose = $bindable({}), callback = (coords: Coordinates) => {} } = $props();
 
 	let x = $state('');
 	let y = $state('');
@@ -59,10 +58,12 @@
 		errorMessage = '';
 
 		try {
-			await http.post('/management/coordinates', {
+			const resp = await http.post('/management/coordinates', {
 				x: x ? Number(x.toString().replace(',', '.')) : null,
 				y: y ? Number(y.toString().replace(',', '.')) : null
 			});
+			const coords = resp.data;
+			callback(coords);
 			open = false;
 		} catch (ex) {
 			console.error('Error while adding coordinates', ex);

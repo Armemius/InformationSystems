@@ -1,6 +1,5 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import type { Coordinates } from '$lib/types/coordinates';
 	import Button from '../ui/button/button.svelte';
 	import Input from '../ui/input/input.svelte';
 	import Label from '../ui/label/label.svelte';
@@ -8,8 +7,7 @@
 	import { toast } from 'svelte-sonner';
 
 	let open = $state(false);
-	// let coordinates = $state<Coordinates | null>(null);
-	let { expose = $bindable({}) } = $props();
+	let { expose = $bindable({}), callback = (loc: Location) => {} } = $props();
 
 	let x = $state('');
 	let y = $state('');
@@ -62,11 +60,13 @@
 		errorMessage = '';
 
 		try {
-			await http.post('/management/location', {
+			const resp = await http.post<Location>('/management/location', {
 				x: x ? Number(x.toString().replace(',', '.')) : null,
 				y: y ? Number(y.toString().replace(',', '.')) : null,
 				z: z ? Number(z.toString().replace(',', '.')) : null
 			});
+			const loc = resp.data;
+			callback(loc);
 			open = false;
 		} catch (ex) {
 			console.error('Error while updating location', ex);
