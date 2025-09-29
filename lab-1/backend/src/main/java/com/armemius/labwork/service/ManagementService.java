@@ -76,6 +76,9 @@ public class ManagementService {
         merged.setType(first.getType());
 
         Organization saved = organizationRepository.save(merged);
+        organizationRepository.delete(first);
+        organizationRepository.delete(second);
+
         return mapper.toDto(saved);
     }
 
