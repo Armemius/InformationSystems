@@ -39,6 +39,32 @@
 	const nextPageAvailable = $derived(currentPage + 1 < totalPages);
 
 	let unsubscribe: (() => void) | null = null;
+	type columns = 'x' | 'y' | 'z';
+	let sortColumn = $state<columns | null>(null);
+	let sortDirection = $state<'asc' | 'desc' | null>(null);
+
+	const updateSort = (col: columns) => {
+		if (sortColumn === null || sortColumn !== col) {
+			sortColumn = col;
+			sortDirection = 'asc';
+		} else if (sortColumn === col && sortDirection == 'asc') {
+			sortDirection = 'desc';
+		} else {
+			sortColumn = null;
+			sortDirection = null;
+		}
+		fetchData();
+	};
+
+	const showSortDirection = (col: columns) => {
+		if (col != sortColumn) {
+			return '';
+		}
+		if (sortDirection == 'asc') {
+			return '↓';
+		}
+		return '↑';
+	};
 
 	onMount(() => {
 		fetchData();
@@ -60,7 +86,9 @@
 			const respLocation = await http.get<Location[]>('/management/location', {
 				params: {
 					page: currentPage,
-					size: pageSize
+					size: pageSize,
+					sortBy: sortColumn ?? 'id',
+					sort: sortDirection ?? 'asc'
 				}
 			});
 			locationsList = respLocation.data;
@@ -157,9 +185,15 @@
 				<Table.Header>
 					<Table.Row>
 						<Table.Head class="w-[100px]">ID</Table.Head>
-						<Table.Head>X</Table.Head>
-						<Table.Head>Y</Table.Head>
-						<Table.Head>Z</Table.Head>
+						<Table.Head class="cursor-pointer" onclick={() => updateSort('x')}
+							>X{showSortDirection('x')}</Table.Head
+						>
+						<Table.Head class="cursor-pointer" onclick={() => updateSort('y')}
+							>Y{showSortDirection('y')}</Table.Head
+						>
+						<Table.Head class="cursor-pointer" onclick={() => updateSort('z')}
+							>Z{showSortDirection('z')}</Table.Head
+						>
 						<Table.Head class="w-[50px]"></Table.Head>
 					</Table.Row>
 				</Table.Header>

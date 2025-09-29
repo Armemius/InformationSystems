@@ -59,6 +59,32 @@
 	const nextPageAvailable = $derived(currentPage + 1 < totalPages);
 
 	let unsubscribe: (() => void) | null = null;
+	type columns = 'annualTurnover' | 'employeesCount' | 'rating';
+	let sortColumn = $state<columns | null>(null);
+	let sortDirection = $state<'asc' | 'desc' | null>(null);
+
+	const updateSort = (col: columns) => {
+		if (sortColumn === null || sortColumn !== col) {
+			sortColumn = col;
+			sortDirection = 'asc';
+		} else if (sortColumn === col && sortDirection == 'asc') {
+			sortDirection = 'desc';
+		} else {
+			sortColumn = null;
+			sortDirection = null;
+		}
+		fetchData();
+	};
+
+	const showSortDirection = (col: columns) => {
+		if (col != sortColumn) {
+			return '';
+		}
+		if (sortDirection == 'asc') {
+			return '↓';
+		}
+		return '↑';
+	};
 
 	onMount(() => {
 		fetchData();
@@ -81,7 +107,9 @@
 				params: {
 					page: currentPage,
 					size: pageSize,
-					filter: currentFilter
+					filter: currentFilter,
+					sortBy: sortColumn ?? 'id',
+					sort: sortDirection ?? 'asc'
 				}
 			});
 			organizationList = respOrganization.data;
@@ -231,9 +259,15 @@
 						<Table.Head>Координаты</Table.Head>
 						<Table.Head>Дата создания</Table.Head>
 						<Table.Head>Официальный адрес</Table.Head>
-						<Table.Head>Выручка за год</Table.Head>
-						<Table.Head>Сотрудники</Table.Head>
-						<Table.Head>Рейтинг</Table.Head>
+						<Table.Head class="cursor-pointer" onclick={() => updateSort('annualTurnover')}
+							>Выручка за год{showSortDirection('annualTurnover')}</Table.Head
+						>
+						<Table.Head class="cursor-pointer" onclick={() => updateSort('employeesCount')}
+							>Сотрудники{showSortDirection('employeesCount')}</Table.Head
+						>
+						<Table.Head class="cursor-pointer" onclick={() => updateSort('rating')}
+							>Рейтинг{showSortDirection('rating')}</Table.Head
+						>
 						<Table.Head>Тип организации</Table.Head>
 						<Table.Head>Адрес для корреспонденции</Table.Head>
 						<Table.Head class="w-[50px]"></Table.Head>

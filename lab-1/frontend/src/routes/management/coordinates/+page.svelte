@@ -39,6 +39,32 @@
 	const nextPageAvailable = $derived(currentPage + 1 < totalPages);
 
 	let unsubscribe: (() => void) | null = null;
+	type columns = 'x' | 'y';
+	let sortColumn = $state<columns | null>(null);
+	let sortDirection = $state<'asc' | 'desc' | null>(null);
+
+	const updateSort = (col: columns) => {
+		if (sortColumn === null || sortColumn !== col) {
+			sortColumn = col;
+			sortDirection = 'asc';
+		} else if (sortColumn === col && sortDirection == 'asc') {
+			sortDirection = 'desc';
+		} else {
+			sortColumn = null;
+			sortDirection = null;
+		}
+		fetchData();
+	};
+
+	const showSortDirection = (col: columns) => {
+		if (col != sortColumn) {
+			return '';
+		}
+		if (sortDirection == 'asc') {
+			return '↓';
+		}
+		return '↑';
+	};
 
 	onMount(() => {
 		fetchData();
@@ -60,7 +86,9 @@
 			const respCoordinates = await http.get<Coordinates[]>('/management/coordinates', {
 				params: {
 					page: currentPage,
-					size: pageSize
+					size: pageSize,
+					sortBy: sortColumn ?? 'id',
+					sort: sortDirection ?? 'asc'
 				}
 			});
 			coordinatesList = respCoordinates.data;
@@ -150,14 +178,18 @@
 		</div>
 	</header>
 
-	<div class="flex h-full w-full flex-col justify-between p-8 relative">
-		<div class="overflow-y-scroll absolute inset-8">
+	<div class="relative flex h-full w-full flex-col justify-between p-8">
+		<div class="absolute inset-8 overflow-y-scroll">
 			<Table.Root>
 				<Table.Header>
 					<Table.Row>
 						<Table.Head class="w-[100px]">ID</Table.Head>
-						<Table.Head>X</Table.Head>
-						<Table.Head>Y</Table.Head>
+						<Table.Head class="cursor-pointer" onclick={() => updateSort('x')}
+							>X{showSortDirection('x')}</Table.Head
+						>
+						<Table.Head class="cursor-pointer" onclick={() => updateSort('y')}
+							>Y{showSortDirection('y')}</Table.Head
+						>
 						<Table.Head class="w-[50px]"></Table.Head>
 					</Table.Row>
 				</Table.Header>
@@ -176,7 +208,7 @@
 			</Table.Root>
 		</div>
 	</div>
-	<div class="mt-8 mb-4 flex items-center justify-between px-4 gap-4">
+	<div class="mt-8 mb-4 flex items-center justify-between gap-4 px-4">
 		<Button onclick={() => toggleCreateDialogApi.toggle()} variant="outline" size="sm">
 			<PlusIcon />
 			<span class="hidden lg:inline">Добавить новый элемент</span>
