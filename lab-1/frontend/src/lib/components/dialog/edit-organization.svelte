@@ -260,7 +260,7 @@
 			<div class="grid grid-cols-4 items-center gap-4">
 				<Label for="rating" class="text-right">
 					<span>
-						Рейтинги<span class="text-red-500">*</span>
+						Рейтинг<span class="text-red-500">*</span>
 					</span>
 				</Label>
 				<Input id="rating" type="number" bind:value={rating} class="col-span-3" />
