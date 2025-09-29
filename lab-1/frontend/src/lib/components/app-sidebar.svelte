@@ -45,14 +45,14 @@
 				icon: BriefcaseIcon,
 				isActive: true,
 				items: [
-					{
-						title: 'Карта',
-						url: '/map'
-					},
+					// {
+					// 	title: 'Карта',
+					// 	url: '/map'
+					// },
 					{
 						title: 'Операции',
 						url: '/operations'
-					},
+					}
 				]
 			},
 			{
