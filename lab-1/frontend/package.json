@@ -49,6 +49,7 @@
 	},
 	"dependencies": {
 		"@stomp/stompjs": "^7.2.0",
+		"@tabler/icons-svelte": "^3.35.0",
 		"axios": "^1.12.2",
 		"mode-watcher": "^1.1.0",
 		"sockjs-client": "^1.6.1"
