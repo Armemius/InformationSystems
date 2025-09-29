@@ -1,8 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { authStore, loadUser } from '$lib/stores/user';
-	import AuthForm from '$lib/components/auth/auth-form.svelte';
-	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';

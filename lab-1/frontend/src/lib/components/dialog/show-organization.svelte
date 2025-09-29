@@ -1,25 +1,20 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import type { Organization } from '$lib/types/organization';
-	import type { Location } from '$lib/types/location';
 	import Button from '../ui/button/button.svelte';
 	import Input from '../ui/input/input.svelte';
 	import Label from '../ui/label/label.svelte';
 	import http from '$lib/api/http';
 	import { toast } from 'svelte-sonner';
-	import PlusIcon from '@tabler/icons-svelte/icons/plus';
 	import ShowCoordinatesDialog from '$lib/components/dialog/show-coordinates.svelte';
 	import ShowAddressDialog from '$lib/components/dialog/show-address.svelte';
-	import SelectCoordinatesDialog from '$lib/components/dialog/select-coordinates.svelte';
-	import CreateCoordinatesDialog from '$lib/components/dialog/create-coordinates.svelte';
-	import SelectAddressDialog from '$lib/components/dialog/select-address.svelte';
-	import CreateAddressDialog from '$lib/components/dialog/create-address.svelte';
-	import { type Coordinates } from '$lib/types/coordinates';
-	import { type Address } from '$lib/types/address';
 	import * as Select from '$lib/components/ui/select';
+	import type { Coordinates } from '$lib/types/coordinates';
+	import type { ShowApi } from '$lib/types/togglers';
+	import type { Address } from '$lib/types/address';
 
 	let open = $state(false);
-	let { expose = $bindable({}), callback = (addr: Organization) => {} } = $props();
+	let { expose = $bindable({}) } = $props();
 
 	let id = $state<number | null>(null);
 	let ownerId = $state<number | null>(null);
@@ -32,16 +27,9 @@
 	let rating = $state('');
 	let organizationType = $state('NULL');
 	let postalAddressId = $state<number | null>(null);
-	let errorMessage = $state('');
 
-	let selectCoordinatesApi = $state<any>({});
-	let selectOfficialAddressApi = $state<any>({});
-	let selectPostalAddressApi = $state<any>({});
-	let createCoordinatesApi = $state<any>({});
-	let createOfficialAddressApi = $state<any>({});
-	let createPostalAddressApi = $state<any>({});
-	let showAddressApi = $state<any>({});
-	let showCoordinatesApi = $state<any>({});
+	let showAddressApi = $state<ShowApi<Address>>({});
+	let showCoordinatesApi = $state<ShowApi<Coordinates>>({});
 
 	expose.toggle = (org: Organization) => {
 		id = org.id ?? null;
@@ -60,7 +48,7 @@
 
 	expose.toggleById = async (orgId: number) => {
 		try {
-			const resp = await http.get<Organization>(`/management/organization/${id}`);
+			const resp = await http.get<Organization>(`/management/organization/${orgId}`);
 			const org = resp.data;
 			id = org.id ?? null;
 			ownerId = org.ownerId ?? null;
@@ -134,7 +122,11 @@
 					id="town"
 					class="col-span-3"
 					variant="outline"
-					onclick={() => showCoordinatesApi.toggleById(coordId)}
+					onclick={() => {
+						if (showCoordinatesApi.toggleById && coordId) {
+							showCoordinatesApi.toggleById(coordId);
+						}
+					}}
 					disabled={!coordId}
 				>
 					{#if coordId}
@@ -154,7 +146,11 @@
 					id="town"
 					class="col-span-3"
 					variant="outline"
-					onclick={() => showAddressApi.toggleById(officialAddressId)}
+					onclick={() => {
+						if (showAddressApi.toggleById && officialAddressId) {
+							showAddressApi.toggleById(officialAddressId);
+						}
+					}}
 					disabled={!officialAddressId}
 				>
 					{#if officialAddressId}
@@ -196,12 +192,12 @@
 							{orgTypes[organizationType] ?? '-'}
 						</Select.Trigger>
 						<Select.Content side="top">
-							<Select.Item value={'NULL'}>-</Select.Item>
-							<Select.Item value={'COMMERCIAL'}>Коммерческая</Select.Item>
-							<Select.Item value={'PUBLIC'}>Публичная</Select.Item>
-							<Select.Item value={'GOVERNMENT'}>Государственная</Select.Item>
-							<Select.Item value={'TRUST'}>Трастовая</Select.Item>
-							<Select.Item value={'OPEN_JOINT_STOCK_COMPANY'}
+							<Select.Item value="NULL">-</Select.Item>
+							<Select.Item value="COMMERCIAL">Коммерческая</Select.Item>
+							<Select.Item value="PUBLIC">Публичная</Select.Item>
+							<Select.Item value="GOVERNMENT">Государственная</Select.Item>
+							<Select.Item value="TRUST">Трастовая</Select.Item>
+							<Select.Item value="OPEN_JOINT_STOCK_COMPANY"
 								>Открытое акционерное общество</Select.Item
 							>
 						</Select.Content>
@@ -214,7 +210,11 @@
 					id="town"
 					class="col-span-3"
 					variant="outline"
-					onclick={() => showAddressApi.toggleById(postalAddressId)}
+					onclick={() => {
+						if (showAddressApi.toggleById && postalAddressId) {
+							showAddressApi.toggleById(postalAddressId);
+						}
+					}}
 					disabled={!postalAddressId}
 				>
 					{#if postalAddressId}

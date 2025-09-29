@@ -3,52 +3,33 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import * as Table from '$lib/components/ui/table';
-	import PlusIcon from '@tabler/icons-svelte/icons/plus';
 	import SearchIcon from '@lucide/svelte/icons/search';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import ResetIcon from '@lucide/svelte/icons/rotate-ccw';
-	import { Label } from '$lib/components/ui/label';
-	import * as Select from '$lib/components/ui/select';
 	import { Button } from '$lib/components/ui/button';
-	import ChevronsLeftIcon from '@tabler/icons-svelte/icons/chevrons-left';
-	import ChevronLeftIcon from '@tabler/icons-svelte/icons/chevron-left';
-	import ChevronRightIcon from '@tabler/icons-svelte/icons/chevron-right';
-	import ChevronsRightIcon from '@tabler/icons-svelte/icons/chevrons-right';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import DotsVerticalIcon from '@tabler/icons-svelte/icons/dots-vertical';
-	import ws from '$lib/api/ws';
 	import http from '$lib/api/http';
 	import { toast } from 'svelte-sonner';
-	import { onDestroy, onMount } from 'svelte';
-	import type { Data } from '$lib/types/data';
 	import { type Organization } from '$lib/types/organization';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import EditOrganizationDialog from '$lib/components/dialog/edit-organization.svelte';
-	import CreateOrganizationDialog from '$lib/components/dialog/create-organization.svelte';
 	import AbsorbOrganizationDialog from '$lib/components/dialog/absorb-organization.svelte';
 	import MergeOrganizationDialog from '$lib/components/dialog/merge-organizations.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import ShowAdressDialog from '$lib/components/dialog/show-organization.svelte';
 	import ShowCoordinatesDialog from '$lib/components/dialog/show-coordinates.svelte';
 	import ShowAddressDialog from '$lib/components/dialog/show-address.svelte';
-	import ShowLocationDialog from '$lib/components/dialog/show-location.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
+	import type { AbsorbApi, MergeApi, ShowApi } from '$lib/types/togglers';
+	import type { Coordinates } from '$lib/types/coordinates';
+	import type { Address } from '$lib/types/address';
 
 	let organizationList = $state<Organization[]>([]);
 	let filter = $state<string>('');
 	let rating = $state<string>('');
-	let currentFilter = $state<string | null>(null);
 	let tabValue = $state('prefix');
 	let inputError = $state(false);
 
-	let toggleEditDialogApi = $state<any>({});
-	let toggleCreateDialogApi = $state<any>({});
-	let toggleShowOrganizationDialogApi = $state<any>({});
-	let toggleShowCoordinatesDialogApi = $state<any>({});
-	let toggleShowLocationDialogApi = $state<any>({});
-	let toggleShowAddressDialogApi = $state<any>({});
-	let toggleAbsorbOrgDialogApi = $state<any>({});
-	let toggleMergeOrgDialogApi = $state<any>({});
+	let toggleShowCoordinatesDialogApi = $state<ShowApi<Coordinates>>({});
+	let toggleShowAddressDialogApi = $state<ShowApi<Address>>({});
+	let toggleAbsorbOrgDialogApi = $state<AbsorbApi>({});
+	let toggleMergeOrgDialogApi = $state<MergeApi>({});
 
 	const orgTypes: Record<string, string> = {
 		COMMERCIAL: 'Коммерческая',
@@ -57,8 +38,6 @@
 		TRUST: 'Трастовая',
 		OPEN_JOINT_STOCK_COMPANY: 'Открытое акционерное общество'
 	};
-
-	onMount(() => {});
 
 	const formatToRuDate = (isoDate: string, useUTC = false) => {
 		const date = new Date(isoDate);
@@ -83,7 +62,7 @@
 			});
 			organizationList = resp.data;
 		} catch (ex) {
-			console.error('Error while fetching organizations by prefix');
+			console.error('Error while fetching organizations by prefix', ex);
 			toast('Ошибка при получении организаций');
 		}
 	};
@@ -97,7 +76,7 @@
 			});
 			organizationList = resp.data;
 		} catch (ex) {
-			console.error('Error while fetching organizations by prefix');
+			console.error('Error while fetching organizations by prefix', ex);
 			toast('Ошибка при получении организаций');
 		}
 	};
@@ -111,7 +90,7 @@
 			});
 			organizationList = resp.data;
 		} catch (ex) {
-			console.error('Error while fetching organizations by prefix');
+			console.error('Error while fetching organizations by prefix', ex);
 			toast('Ошибка при получении организаций');
 		}
 	};
@@ -251,8 +230,11 @@
 									<Badge
 										class="cursor-pointer"
 										variant="secondary"
-										onclick={() => toggleShowCoordinatesDialogApi.toggleById(org.coordinatesId)}
-										>{'Координаты #' + org.coordinatesId}</Badge
+										onclick={() => {
+											if (toggleShowCoordinatesDialogApi.toggleById && org.coordinatesId) {
+												toggleShowCoordinatesDialogApi.toggleById(org.coordinatesId);
+											}
+										}}>{'Координаты #' + org.coordinatesId}</Badge
 									>
 								{:else}
 									-
@@ -264,8 +246,11 @@
 									<Badge
 										class="cursor-pointer"
 										variant="secondary"
-										onclick={() => toggleShowAddressDialogApi.toggleById(org.officialAddressId)}
-										>{'Адрес #' + org.officialAddressId}</Badge
+										onclick={() => {
+											if (toggleShowAddressDialogApi.toggleById && org.officialAddressId) {
+												toggleShowAddressDialogApi.toggleById(org.officialAddressId);
+											}
+										}}>{'Адрес #' + org.officialAddressId}</Badge
 									>
 								{:else}
 									-
@@ -280,8 +265,11 @@
 									<Badge
 										class="cursor-pointer"
 										variant="secondary"
-										onclick={() => toggleShowAddressDialogApi.toggleById(org.postalAddressId)}
-										>{'Адрес #' + org.postalAddressId}</Badge
+										onclick={() => {
+											if (toggleShowAddressDialogApi.toggleById && org.postalAddressId) {
+												toggleShowAddressDialogApi.toggleById(org.postalAddressId);
+											}
+										}}>{'Адрес #' + org.postalAddressId}</Badge
 									>
 								{:else}
 									-
@@ -295,9 +283,6 @@
 	</div>
 </div>
 
-<ShowAdressDialog bind:expose={toggleShowOrganizationDialogApi} />
-<EditOrganizationDialog bind:expose={toggleEditDialogApi} />
-<CreateOrganizationDialog bind:expose={toggleCreateDialogApi} />
 <ShowCoordinatesDialog bind:expose={toggleShowCoordinatesDialogApi} />
 <ShowAddressDialog bind:expose={toggleShowAddressDialogApi} />
 <AbsorbOrganizationDialog bind:expose={toggleAbsorbOrgDialogApi} />

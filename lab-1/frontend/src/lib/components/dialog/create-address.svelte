@@ -1,7 +1,6 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import type { Address } from '$lib/types/address';
-	import type { Location } from '$lib/types/location';
 	import Button from '../ui/button/button.svelte';
 	import Input from '../ui/input/input.svelte';
 	import Label from '../ui/label/label.svelte';
@@ -10,16 +9,21 @@
 	import PlusIcon from '@tabler/icons-svelte/icons/plus';
 	import SelectLocationDialog from '$lib/components/dialog/select-location.svelte';
 	import CreateLocationDialog from '$lib/components/dialog/create-location.svelte';
+	import type { CreateApi, SelectApi } from '$lib/types/togglers';
+	import type { Callback } from '$lib/types/callback';
 
 	let open = $state(false);
-	let { expose = $bindable({}), callback = (addr: Address) => {} } = $props();
+	let {
+		expose = $bindable({}),
+		callback = () => {}
+	}: { expose: CreateApi; callback?: Callback<Address> } = $props();
 
 	let street = $state('');
 	let zipCode = $state('');
 	let townId = $state<number | null>(null);
 	let errorMessage = $state('');
-	let selectLocationApi = $state<any>({});
-	let createLocationApi = $state<any>({});
+	let selectLocationApi = $state<SelectApi>({});
+	let createLocationApi = $state<CreateApi>({});
 
 	expose.toggle = () => {
 		street = '';
@@ -122,13 +126,13 @@
 
 <SelectLocationDialog
 	bind:expose={selectLocationApi}
-	callback={(loc: Location) => {
+	callback={(loc) => {
 		townId = loc?.id ?? null;
 	}}
 />
 <CreateLocationDialog
 	bind:expose={createLocationApi}
-	callback={(loc: Location) => {
+	callback={(loc) => {
 		townId = loc?.id ?? null;
 	}}
 />

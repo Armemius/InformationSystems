@@ -1,7 +1,6 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import type { Organization } from '$lib/types/organization';
-	import type { Location } from '$lib/types/location';
 	import Button from '../ui/button/button.svelte';
 	import Input from '../ui/input/input.svelte';
 	import Label from '../ui/label/label.svelte';
@@ -12,12 +11,15 @@
 	import CreateCoordinatesDialog from '$lib/components/dialog/create-coordinates.svelte';
 	import SelectAddressDialog from '$lib/components/dialog/select-address.svelte';
 	import CreateAddressDialog from '$lib/components/dialog/create-address.svelte';
-	import { type Coordinates } from '$lib/types/coordinates';
-	import { type Address } from '$lib/types/address';
 	import * as Select from '$lib/components/ui/select';
+	import type { CreateApi, SelectApi } from '$lib/types/togglers';
+	import type { Callback } from '$lib/types/callback';
 
 	let open = $state(false);
-	let { expose = $bindable({}), callback = (addr: Organization) => {} } = $props();
+	let {
+		expose = $bindable({}),
+		callback = () => {}
+	}: { expose: CreateApi; callback?: Callback<Organization> } = $props();
 
 	let name = $state('');
 	let coordId = $state<number | null>(null);
@@ -29,12 +31,12 @@
 	let postalAddressId = $state<number | null>(null);
 	let errorMessage = $state('');
 
-	let selectCoordinatesApi = $state<any>({});
-	let selectOfficialAddressApi = $state<any>({});
-	let selectPostalAddressApi = $state<any>({});
-	let createCoordinatesApi = $state<any>({});
-	let createOfficialAddressApi = $state<any>({});
-	let createPostalAddressApi = $state<any>({});
+	let selectCoordinatesApi = $state<SelectApi>({});
+	let selectOfficialAddressApi = $state<SelectApi>({});
+	let selectPostalAddressApi = $state<SelectApi>({});
+	let createCoordinatesApi = $state<CreateApi>({});
+	let createOfficialAddressApi = $state<CreateApi>({});
+	let createPostalAddressApi = $state<CreateApi>({});
 
 	expose.toggle = () => {
 		name = '';
@@ -236,12 +238,12 @@
 							{orgTypes[organizationType] ?? '-'}
 						</Select.Trigger>
 						<Select.Content side="top">
-							<Select.Item value={'NULL'}>-</Select.Item>
-							<Select.Item value={'COMMERCIAL'}>Коммерческая</Select.Item>
-							<Select.Item value={'PUBLIC'}>Публичная</Select.Item>
-							<Select.Item value={'GOVERNMENT'}>Государственная</Select.Item>
-							<Select.Item value={'TRUST'}>Трастовая</Select.Item>
-							<Select.Item value={'OPEN_JOINT_STOCK_COMPANY'}
+							<Select.Item value="NULL">-</Select.Item>
+							<Select.Item value="COMMERCIAL">Коммерческая</Select.Item>
+							<Select.Item value="PUBLIC">Публичная</Select.Item>
+							<Select.Item value="GOVERNMENT">Государственная</Select.Item>
+							<Select.Item value="TRUST">Трастовая</Select.Item>
+							<Select.Item value="OPEN_JOINT_STOCK_COMPANY"
 								>Открытое акционерное общество</Select.Item
 							>
 						</Select.Content>
@@ -286,37 +288,37 @@
 
 <SelectCoordinatesDialog
 	bind:expose={selectCoordinatesApi}
-	callback={(coords: Coordinates) => {
+	callback={(coords) => {
 		coordId = coords?.id ?? null;
 	}}
 />
 <CreateCoordinatesDialog
 	bind:expose={createCoordinatesApi}
-	callback={(coords: Coordinates) => {
+	callback={(coords) => {
 		coordId = coords?.id ?? null;
 	}}
 />
 <SelectAddressDialog
 	bind:expose={selectOfficialAddressApi}
-	callback={(addr: Address) => {
+	callback={(addr) => {
 		officialAddressId = addr?.id ?? null;
 	}}
 />
 <CreateAddressDialog
 	bind:expose={createOfficialAddressApi}
-	callback={(addr: Address) => {
+	callback={(addr) => {
 		officialAddressId = addr?.id ?? null;
 	}}
 />
 <SelectAddressDialog
 	bind:expose={selectPostalAddressApi}
-	callback={(addr: Address) => {
+	callback={(addr) => {
 		postalAddressId = addr?.id ?? null;
 	}}
 />
 <CreateAddressDialog
 	bind:expose={createPostalAddressApi}
-	callback={(addr: Address) => {
+	callback={(addr) => {
 		postalAddressId = addr?.id ?? null;
 	}}
 />

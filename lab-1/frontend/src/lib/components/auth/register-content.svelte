@@ -1,13 +1,11 @@
 <script lang="ts">
 	import http from '$lib/api/http';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import * as Card from '$lib/components/ui/card/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { authStore } from '$lib/stores/user';
 	import type User from '$lib/types/user';
 
-	const id = $props.id();
 	let { changeMode } = $props();
 
 	let username: string = $state('');

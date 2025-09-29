@@ -19,12 +19,12 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { Data } from '$lib/types/data';
 	import { type Address } from '$lib/types/address';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import EditAddressDialog from '$lib/components/dialog/edit-address.svelte';
 	import CreateAddressDialog from '$lib/components/dialog/create-address.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import ShowAdressDialog from '$lib/components/dialog/show-address.svelte';
 	import ShowLocationDialog from '$lib/components/dialog/show-location.svelte';
+	import type { CreateApi, EditApi, ShowApi } from '$lib/types/togglers';
 
 	let currentPage = $state(0);
 	let totalElements = $state(0);
@@ -32,10 +32,10 @@
 	let pageSizeVariants = [10, 20, 30, 40, 50];
 	let addressList = $state<Address[]>([]);
 
-	let toggleEditDialogApi = $state<any>({});
-	let toggleCreateDialogApi = $state<any>({});
-	let toggleShowAddressDialogApi = $state<any>({});
-	let toggleShowLocationDialogApi = $state<any>({});
+	let toggleEditDialogApi = $state<EditApi<Address>>({});
+	let toggleCreateDialogApi = $state<CreateApi>({});
+	let toggleShowAddressDialogApi = $state<ShowApi<Address>>({});
+	let toggleShowLocationDialogApi = $state<ShowApi<Location>>({});
 
 	const totalPages = $derived(Math.max(Math.ceil(totalElements / pageSize), 1));
 	const prevPageAvailable = $derived(currentPage > 0);
@@ -177,8 +177,11 @@
 									<Badge
 										class="cursor-pointer"
 										variant="secondary"
-										onclick={() => toggleShowLocationDialogApi.toggleById(coordinate.townId)}
-										>{'Локация #' + coordinate.townId}</Badge
+										onclick={() => {
+											if (toggleShowLocationDialogApi.toggleById && coordinate.townId) {
+												toggleShowLocationDialogApi.toggleById(coordinate.townId);
+											}
+										}}>{'Локация #' + coordinate.townId}</Badge
 									>
 								{:else}
 									"N/A"
@@ -195,7 +198,15 @@
 		</div>
 	</div>
 	<div class="mt-8 mb-4 flex items-center justify-between gap-4 px-4">
-		<Button onclick={() => toggleCreateDialogApi.toggle()} variant="outline" size="sm">
+		<Button
+			onclick={() => {
+				if (toggleCreateDialogApi.toggle) {
+					toggleCreateDialogApi.toggle();
+				}
+			}}
+			variant="outline"
+			size="sm"
+		>
 			<PlusIcon />
 			<span class="hidden lg:inline">Добавить новый элемент</span>
 		</Button>
@@ -280,11 +291,19 @@
 			{/snippet}
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content align="end" class="w-32">
-			<DropdownMenu.Item onclick={() => toggleShowAddressDialogApi.toggle(item)}
-				>Информация</DropdownMenu.Item
+			<DropdownMenu.Item
+				onclick={() => {
+					if (toggleShowAddressDialogApi.toggle) {
+						toggleShowAddressDialogApi.toggle(item);
+					}
+				}}>Информация</DropdownMenu.Item
 			>
-			<DropdownMenu.Item onclick={() => toggleEditDialogApi.toggle(item)}
-				>Изменить</DropdownMenu.Item
+			<DropdownMenu.Item
+				onclick={() => {
+					if (toggleEditDialogApi.toggle) {
+						toggleEditDialogApi.toggle(item);
+					}
+				}}>Изменить</DropdownMenu.Item
 			>
 			<DropdownMenu.Item onclick={() => duplicateItem(item)}>Дублировать</DropdownMenu.Item>
 			<DropdownMenu.Separator />

@@ -7,6 +7,8 @@
 	import http from '$lib/api/http';
 	import { toast } from 'svelte-sonner';
 	import ShowLocationDialog from '$lib/components/dialog/show-location.svelte';
+	import type { ShowApi } from '$lib/types/togglers';
+	import type { Location } from '$lib/types/location';
 
 	let open = $state(false);
 	let { expose = $bindable({}) } = $props();
@@ -16,9 +18,7 @@
 	let street = $state('');
 	let zipCode = $state('');
 	let townId = $state<number | null>(null);
-	let errorMessage = $state('');
-	let showLocationApi = $state<any>({});
-	let createLocationApi = $state<any>({});
+	let showLocationApi = $state<ShowApi<Location>>({});
 
 	expose.toggle = (addr: Address) => {
 		if (addr.id) {
@@ -60,41 +60,6 @@
 			console.error('Error while fetching address', ex);
 		}
 	};
-
-	const validate = () => {
-		if (!street) {
-			errorMessage = 'Введите улицу';
-			return false;
-		}
-		if (zipCode && zipCode.length > 24) {
-			errorMessage = 'Почтовый код должен быть короче 24 символов';
-			return false;
-		}
-		if (!townId) {
-			errorMessage = 'Выберите город';
-			return false;
-		}
-		return true;
-	};
-
-	const submit = async () => {
-		if (!validate()) {
-			return;
-		}
-		errorMessage = '';
-
-		try {
-			await http.patch<Address>(`/management/address/${id}`, {
-				street: street,
-				zipCode: zipCode ? zipCode : null,
-				townId: townId
-			});
-			open = false;
-		} catch (ex) {
-			console.error('Error while adding address', ex);
-			toast('Ошибка при добавлении адреса');
-		}
-	};
 </script>
 
 <Dialog.Root bind:open>
@@ -127,7 +92,11 @@
 						id="town"
 						class="col-span-5"
 						variant="outline"
-						onclick={() => showLocationApi.toggleById(townId)}
+						onclick={() => {
+							if (showLocationApi.toggleById && townId) {
+								showLocationApi.toggleById(townId);
+							}
+						}}
 					>
 						{#if townId}
 							Локация #{townId}

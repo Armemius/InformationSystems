@@ -21,15 +21,16 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { Data } from '$lib/types/data';
 	import { type Organization } from '$lib/types/organization';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import EditOrganizationDialog from '$lib/components/dialog/edit-organization.svelte';
 	import CreateOrganizationDialog from '$lib/components/dialog/create-organization.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import ShowAdressDialog from '$lib/components/dialog/show-organization.svelte';
 	import ShowCoordinatesDialog from '$lib/components/dialog/show-coordinates.svelte';
 	import ShowAddressDialog from '$lib/components/dialog/show-address.svelte';
-	import ShowLocationDialog from '$lib/components/dialog/show-location.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
+	import type { CreateApi, EditApi, ShowApi } from '$lib/types/togglers';
+	import type { Coordinates } from '$lib/types/coordinates';
+	import type { Address } from '$lib/types/address';
 
 	let currentPage = $state(0);
 	let totalElements = $state(0);
@@ -39,12 +40,11 @@
 	let filter = $state<string>('');
 	let currentFilter = $state<string | null>(null);
 
-	let toggleEditDialogApi = $state<any>({});
-	let toggleCreateDialogApi = $state<any>({});
-	let toggleShowOrganizationDialogApi = $state<any>({});
-	let toggleShowCoordinatesDialogApi = $state<any>({});
-	let toggleShowLocationDialogApi = $state<any>({});
-	let toggleShowAddressDialogApi = $state<any>({});
+	let toggleEditDialogApi = $state<EditApi<Organization>>({});
+	let toggleCreateDialogApi = $state<CreateApi>({});
+	let toggleShowOrganizationDialogApi = $state<ShowApi<Organization>>({});
+	let toggleShowCoordinatesDialogApi = $state<ShowApi<Coordinates>>({});
+	let toggleShowAddressDialogApi = $state<ShowApi<Address>>({});
 
 	const orgTypes: Record<string, string> = {
 		COMMERCIAL: 'Коммерческая',
@@ -283,8 +283,11 @@
 									<Badge
 										class="cursor-pointer"
 										variant="secondary"
-										onclick={() => toggleShowCoordinatesDialogApi.toggleById(org.coordinatesId)}
-										>{'Координаты #' + org.coordinatesId}</Badge
+										onclick={() => {
+											if (toggleShowCoordinatesDialogApi.toggleById && org.coordinatesId) {
+												toggleShowCoordinatesDialogApi.toggleById(org.coordinatesId);
+											}
+										}}>{'Координаты #' + org.coordinatesId}</Badge
 									>
 								{:else}
 									-
@@ -296,8 +299,11 @@
 									<Badge
 										class="cursor-pointer"
 										variant="secondary"
-										onclick={() => toggleShowAddressDialogApi.toggleById(org.officialAddressId)}
-										>{'Адрес #' + org.officialAddressId}</Badge
+										onclick={() => {
+											if (toggleShowAddressDialogApi.toggleById && org.officialAddressId) {
+												toggleShowAddressDialogApi.toggleById(org.officialAddressId);
+											}
+										}}>{'Адрес #' + org.officialAddressId}</Badge
 									>
 								{:else}
 									-
@@ -312,8 +318,11 @@
 									<Badge
 										class="cursor-pointer"
 										variant="secondary"
-										onclick={() => toggleShowAddressDialogApi.toggleById(org.postalAddressId)}
-										>{'Адрес #' + org.postalAddressId}</Badge
+										onclick={() => {
+											if (toggleShowAddressDialogApi.toggleById && org.postalAddressId) {
+												toggleShowAddressDialogApi.toggleById(org.postalAddressId);
+											}
+										}}>{'Адрес #' + org.postalAddressId}</Badge
 									>
 								{:else}
 									-
@@ -329,7 +338,15 @@
 		</div>
 	</div>
 	<div class="mt-8 mb-4 flex items-center justify-between gap-4 px-4">
-		<Button onclick={() => toggleCreateDialogApi.toggle()} variant="outline" size="sm">
+		<Button
+			onclick={() => {
+				if (toggleCreateDialogApi.toggle) {
+					toggleCreateDialogApi.toggle();
+				}
+			}}
+			variant="outline"
+			size="sm"
+		>
 			<PlusIcon />
 			<span class="hidden lg:inline">Добавить новый элемент</span>
 		</Button>
@@ -415,11 +432,19 @@
 			{/snippet}
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content align="end" class="w-32">
-			<DropdownMenu.Item onclick={() => toggleShowOrganizationDialogApi.toggle(item)}
-				>Информация</DropdownMenu.Item
+			<DropdownMenu.Item
+				onclick={() => {
+					if (toggleShowOrganizationDialogApi.toggle) {
+						toggleShowOrganizationDialogApi.toggle(item);
+					}
+				}}>Информация</DropdownMenu.Item
 			>
-			<DropdownMenu.Item onclick={() => toggleEditDialogApi.toggle(item)}
-				>Изменить</DropdownMenu.Item
+			<DropdownMenu.Item
+				onclick={() => {
+					if (toggleEditDialogApi.toggle) {
+						toggleEditDialogApi.toggle(item);
+					}
+				}}>Изменить</DropdownMenu.Item
 			>
 			<DropdownMenu.Item onclick={() => duplicateItem(item)}>Дублировать</DropdownMenu.Item>
 			<DropdownMenu.Separator />

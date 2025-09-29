@@ -1,18 +1,10 @@
 <script lang="ts">
-	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import { Separator } from '$lib/components/ui/separator/index.js';
-	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import * as Table from '$lib/components/ui/table';
-	import PlusIcon from '@tabler/icons-svelte/icons/plus';
-	import { Label } from '$lib/components/ui/label';
-	import * as Select from '$lib/components/ui/select';
 	import { Button } from '$lib/components/ui/button';
 	import ChevronsLeftIcon from '@tabler/icons-svelte/icons/chevrons-left';
 	import ChevronLeftIcon from '@tabler/icons-svelte/icons/chevron-left';
 	import ChevronRightIcon from '@tabler/icons-svelte/icons/chevron-right';
 	import ChevronsRightIcon from '@tabler/icons-svelte/icons/chevrons-right';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import DotsVerticalIcon from '@tabler/icons-svelte/icons/dots-vertical';
 	import ws from '$lib/api/ws';
 	import http from '$lib/api/http';
 	import { toast } from 'svelte-sonner';
@@ -20,14 +12,14 @@
 	import type { Data } from '$lib/types/data';
 	import { type Organization } from '$lib/types/organization';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import EditOrganizationDialog from '$lib/components/dialog/edit-organization.svelte';
-	import CreateOrganizationDialog from '$lib/components/dialog/create-organization.svelte';
-	import ShowOrganizationDialog from '$lib/components/dialog/show-organization.svelte';
-	import Badge from '../ui/badge/badge.svelte';
-	import ShowLocationDialog from '$lib/components/dialog/show-location.svelte';
+	import type { SelectApi } from '$lib/types/togglers';
+	import type { Callback } from '$lib/types/callback';
 
 	let open = $state(false);
-	let { expose = $bindable({}), callback = (org: Organization) => {} } = $props();
+	let {
+		expose = $bindable({}),
+		callback = () => {}
+	}: { expose: SelectApi; callback?: Callback<Organization> } = $props();
 
 	expose.toggle = () => {
 		currentOrganization = null;
@@ -55,7 +47,6 @@
 	};
 
 	let unsubscribe: (() => void) | null = null;
-	let toggleShowLocationDialogApi = $state<any>({});
 
 	onMount(() => {
 		fetchData();
@@ -214,5 +205,3 @@
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
-
-<ShowLocationDialog bind:expose={toggleShowLocationDialogApi} />

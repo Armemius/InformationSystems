@@ -5,9 +5,15 @@
 	import Label from '../ui/label/label.svelte';
 	import http from '$lib/api/http';
 	import { toast } from 'svelte-sonner';
+	import type { CreateApi } from '$lib/types/togglers';
+	import type { Callback } from '$lib/types/callback';
+	import type { Location } from '$lib/types/location';
 
 	let open = $state(false);
-	let { expose = $bindable({}), callback = (loc: Location) => {} } = $props();
+	let {
+		expose = $bindable({}),
+		callback = () => {}
+	}: { expose: CreateApi; callback?: Callback<Location> } = $props();
 
 	let x = $state('');
 	let y = $state('');

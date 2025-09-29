@@ -1,7 +1,6 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import type { Organization } from '$lib/types/organization';
-	import type { Location } from '$lib/types/location';
 	import Button from '../ui/button/button.svelte';
 	import Input from '../ui/input/input.svelte';
 	import Label from '../ui/label/label.svelte';
@@ -9,15 +8,12 @@
 	import { toast } from 'svelte-sonner';
 	import PlusIcon from '@tabler/icons-svelte/icons/plus';
 	import SelectOrganizationDialog from '$lib/components/dialog/select-organization.svelte';
-	import CreateCoordinatesDialog from '$lib/components/dialog/create-coordinates.svelte';
 	import SelectAddressDialog from '$lib/components/dialog/select-address.svelte';
 	import CreateAddressDialog from '$lib/components/dialog/create-address.svelte';
-	import { type Coordinates } from '$lib/types/coordinates';
-	import { type Address } from '$lib/types/address';
-	import * as Select from '$lib/components/ui/select';
+	import type { CreateApi, SelectApi } from '$lib/types/togglers';
 
 	let open = $state(false);
-	let { expose = $bindable({}), callback = (org: Organization) => {} } = $props();
+	let { expose = $bindable({}) } = $props();
 
 	let name = $state('');
 	let addressId = $state<number | null>(null);
@@ -25,10 +21,10 @@
 	let secondOrgId = $state<number | null>(null);
 	let errorMessage = $state('');
 
-	let selectFirstOrganizationApi = $state<any>({});
-	let selectSecondOrganizationApi = $state<any>({});
-	let selectAddressDialogApi = $state<any>({});
-	let createAddressDialogApi = $state<any>({});
+	let selectFirstOrganizationApi = $state<SelectApi>({});
+	let selectSecondOrganizationApi = $state<SelectApi>({});
+	let selectAddressDialogApi = $state<SelectApi>({});
+	let createAddressDialogApi = $state<CreateApi>({});
 
 	expose.toggle = () => {
 		name = '';
@@ -66,7 +62,7 @@
 		errorMessage = '';
 
 		try {
-			const resp = await http.post<Organization>(
+			await http.post<Organization>(
 				'/management/merge',
 				{},
 				{
@@ -78,8 +74,6 @@
 					}
 				}
 			);
-			const addr = resp.data;
-			callback(addr);
 			open = false;
 		} catch (ex) {
 			console.error('Error while absorbing organization', ex);
@@ -189,25 +183,25 @@
 
 <SelectAddressDialog
 	bind:expose={selectAddressDialogApi}
-	callback={(addr: Address) => {
+	callback={(addr) => {
 		addressId = addr?.id ?? null;
 	}}
 />
 <CreateAddressDialog
 	bind:expose={createAddressDialogApi}
-	callback={(addr: Address) => {
+	callback={(addr) => {
 		addressId = addr?.id ?? null;
 	}}
 />
 <SelectOrganizationDialog
 	bind:expose={selectFirstOrganizationApi}
-	callback={(org: Organization) => {
+	callback={(org) => {
 		firstOrgId = org?.id ?? null;
 	}}
 />
 <SelectOrganizationDialog
 	bind:expose={selectSecondOrganizationApi}
-	callback={(org: Organization) => {
+	callback={(org) => {
 		secondOrgId = org?.id ?? null;
 	}}
 />

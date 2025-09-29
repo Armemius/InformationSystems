@@ -1,30 +1,22 @@
 <script lang="ts">
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import type { Organization } from '$lib/types/organization';
-	import type { Location } from '$lib/types/location';
 	import Button from '../ui/button/button.svelte';
-	import Input from '../ui/input/input.svelte';
 	import Label from '../ui/label/label.svelte';
 	import http from '$lib/api/http';
 	import { toast } from 'svelte-sonner';
-	import PlusIcon from '@tabler/icons-svelte/icons/plus';
 	import SelectOrganizationDialog from '$lib/components/dialog/select-organization.svelte';
-	import CreateCoordinatesDialog from '$lib/components/dialog/create-coordinates.svelte';
-	import SelectAddressDialog from '$lib/components/dialog/select-address.svelte';
-	import CreateAddressDialog from '$lib/components/dialog/create-address.svelte';
-	import { type Coordinates } from '$lib/types/coordinates';
-	import { type Address } from '$lib/types/address';
-	import * as Select from '$lib/components/ui/select';
+	import type { SelectApi } from '$lib/types/togglers';
 
 	let open = $state(false);
-	let { expose = $bindable({}), callback = (org: Organization) => {} } = $props();
+	let { expose = $bindable({}) } = $props();
 
 	let firstOrgId = $state<number | null>(null);
 	let secondOrgId = $state<number | null>(null);
 	let errorMessage = $state('');
 
-	let selectFirstOrganizationApi = $state<any>({});
-	let selectSecondOrganizationApi = $state<any>({});
+	let selectFirstOrganizationApi = $state<SelectApi>({});
+	let selectSecondOrganizationApi = $state<SelectApi>({});
 
 	expose.toggle = () => {
 		firstOrgId = null;
@@ -56,7 +48,7 @@
 		errorMessage = '';
 
 		try {
-			const resp = await http.post<Organization>(
+			await http.post<Organization>(
 				'/management/absorb',
 				{},
 				{
@@ -66,8 +58,6 @@
 					}
 				}
 			);
-			const addr = resp.data;
-			callback(addr);
 			open = false;
 		} catch (ex) {
 			console.error('Error while absorbing organization', ex);
@@ -141,13 +131,13 @@
 
 <SelectOrganizationDialog
 	bind:expose={selectFirstOrganizationApi}
-	callback={(org: Organization) => {
+	callback={(org) => {
 		firstOrgId = org?.id ?? null;
 	}}
 />
 <SelectOrganizationDialog
 	bind:expose={selectSecondOrganizationApi}
-	callback={(org: Organization) => {
+	callback={(org) => {
 		secondOrgId = org?.id ?? null;
 	}}
 />

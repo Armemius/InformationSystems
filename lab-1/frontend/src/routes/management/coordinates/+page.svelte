@@ -19,10 +19,10 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { Data } from '$lib/types/data';
 	import { type Coordinates } from '$lib/types/coordinates';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import EditCoordinatesDialog from '$lib/components/dialog/edit-coordinates.svelte';
 	import CreateCoordinatesDialog from '$lib/components/dialog/create-coordinates.svelte';
 	import ShowCoordinatesDialog from '$lib/components/dialog/show-coordinates.svelte';
+	import type { CreateApi, EditApi, ShowApi } from '$lib/types/togglers';
 
 	let currentPage = $state(0);
 	let totalElements = $state(0);
@@ -30,9 +30,9 @@
 	let pageSizeVariants = [10, 20, 30, 40, 50];
 	let coordinatesList = $state<Coordinates[]>([]);
 
-	let toggleShowDialogApi = $state<any>({});
-	let toggleEditDialogApi = $state<any>({});
-	let toggleCreateDialogApi = $state<any>({});
+	let toggleShowDialogApi = $state<ShowApi<Coordinates>>({});
+	let toggleEditDialogApi = $state<EditApi<Coordinates>>({});
+	let toggleCreateDialogApi = $state<CreateApi>({});
 
 	const totalPages = $derived(Math.max(Math.ceil(totalElements / pageSize), 1));
 	const prevPageAvailable = $derived(currentPage > 0);
@@ -209,7 +209,15 @@
 		</div>
 	</div>
 	<div class="mt-8 mb-4 flex items-center justify-between gap-4 px-4">
-		<Button onclick={() => toggleCreateDialogApi.toggle()} variant="outline" size="sm">
+		<Button
+			onclick={() => {
+				if (toggleCreateDialogApi.toggle) {
+					toggleCreateDialogApi.toggle();
+				}
+			}}
+			variant="outline"
+			size="sm"
+		>
 			<PlusIcon />
 			<span class="hidden lg:inline">Добавить новый элемент</span>
 		</Button>
@@ -293,11 +301,19 @@
 			{/snippet}
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content align="end" class="w-32">
-			<DropdownMenu.Item onclick={() => toggleShowDialogApi.toggle(item)}
-				>Информация</DropdownMenu.Item
+			<DropdownMenu.Item
+				onclick={() => {
+					if (toggleShowDialogApi.toggle) {
+						toggleShowDialogApi.toggle(item);
+					}
+				}}>Информация</DropdownMenu.Item
 			>
-			<DropdownMenu.Item onclick={() => toggleEditDialogApi.toggle(item)}
-				>Изменить</DropdownMenu.Item
+			<DropdownMenu.Item
+				onclick={() => {
+					if (toggleEditDialogApi.toggle) {
+						toggleEditDialogApi.toggle(item);
+					}
+				}}>Изменить</DropdownMenu.Item
 			>
 			<DropdownMenu.Item onclick={() => duplicateItem(item)}>Дублировать</DropdownMenu.Item>
 			<DropdownMenu.Separator />

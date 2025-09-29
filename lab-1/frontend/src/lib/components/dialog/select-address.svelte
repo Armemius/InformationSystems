@@ -1,18 +1,10 @@
 <script lang="ts">
-	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import { Separator } from '$lib/components/ui/separator/index.js';
-	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import * as Table from '$lib/components/ui/table';
-	import PlusIcon from '@tabler/icons-svelte/icons/plus';
-	import { Label } from '$lib/components/ui/label';
-	import * as Select from '$lib/components/ui/select';
 	import { Button } from '$lib/components/ui/button';
 	import ChevronsLeftIcon from '@tabler/icons-svelte/icons/chevrons-left';
 	import ChevronLeftIcon from '@tabler/icons-svelte/icons/chevron-left';
 	import ChevronRightIcon from '@tabler/icons-svelte/icons/chevron-right';
 	import ChevronsRightIcon from '@tabler/icons-svelte/icons/chevrons-right';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import DotsVerticalIcon from '@tabler/icons-svelte/icons/dots-vertical';
 	import ws from '$lib/api/ws';
 	import http from '$lib/api/http';
 	import { toast } from 'svelte-sonner';
@@ -20,14 +12,16 @@
 	import type { Data } from '$lib/types/data';
 	import { type Address } from '$lib/types/address';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import EditAddressDialog from '$lib/components/dialog/edit-address.svelte';
-	import CreateAddressDialog from '$lib/components/dialog/create-address.svelte';
-	import ShowAddressDialog from '$lib/components/dialog/show-address.svelte';
 	import Badge from '../ui/badge/badge.svelte';
 	import ShowLocationDialog from '$lib/components/dialog/show-location.svelte';
+	import type { SelectApi, ShowApi } from '$lib/types/togglers';
+	import type { Callback } from '$lib/types/callback';
 
 	let open = $state(false);
-	let { expose = $bindable({}), callback = (addr: Address) => {} } = $props();
+	let {
+		expose = $bindable({}),
+		callback = () => {}
+	}: { expose: SelectApi; callback?: Callback<Address> } = $props();
 
 	expose.toggle = () => {
 		currentAddress = null;
@@ -55,7 +49,7 @@
 	};
 
 	let unsubscribe: (() => void) | null = null;
-	let toggleShowLocationDialogApi = $state<any>({});
+	let toggleShowLocationDialogApi = $state<ShowApi<Location>>({});
 
 	onMount(() => {
 		fetchData();
@@ -147,8 +141,11 @@
 								<Badge
 									class="cursor-pointer"
 									variant="secondary"
-									onclick={() => toggleShowLocationDialogApi.toggleById(addr.townId)}
-									>{'Локация #' + addr.townId}</Badge
+									onclick={() => {
+										if (toggleShowLocationDialogApi.toggleById && addr.townId) {
+											toggleShowLocationDialogApi.toggleById(addr.townId);
+										}
+									}}>{'Локация #' + addr.townId}</Badge
 								>
 							{:else}
 								"N/A"
